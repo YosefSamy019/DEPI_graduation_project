@@ -9,10 +9,10 @@ from tensorflow.keras.models import load_model
 import spacy
 import random
 
-# Page config
+# إعداد الصفحة
 st.set_page_config(page_title="Chatbot LSTM المطور", layout="wide", page_icon="🤖")
 
-# Load English tokenizer, tagger, parser, NER and word vectors
+# تحميل نموذج اللغة الإنجليزية
 @st.cache_resource
 def load_spacy_model():
     try:
@@ -20,13 +20,12 @@ def load_spacy_model():
     except Exception:
         with st.spinner("جاري تحميل نموذج اللغة الإنجليزية (en_core_web_sm)... قد يستغرق هذا بعض الوقت."):
             spacy.cli.download("en_core_web_sm")
-
         nlp = spacy.load("en_core_web_sm")
     return nlp
 
 nlp = load_spacy_model()
 
-# Pathes
+# المسارات
 MODEL_PATH = "simple_chatbot_code/simple_chatbot_train_model.h5"
 TOKENIZER_PATH = "simple_chatbot_code/tokenizer.pickle"
 LABEL_ENCODER_PATH = "simple_chatbot_code/label_encoder.pickle"
@@ -79,7 +78,7 @@ def predict_intent(text, model, tokenizer, lbl_encoder, max_len):
 
     return predicted_tag
 
-# --- UI Enhancements ---
+# تحسين تنسيق الرسائل
 st.markdown("""
 <style>
     .stChatMessage {
@@ -88,62 +87,55 @@ st.markdown("""
         margin-bottom: 10px;
     }
     .stChatMessage[data-testid="chatAvatarIcon-user"] + div div {
-        background-color: #e6f3ff; /* Light blue for user messages */
+        background-color: #dbeeff;
+        border-left: 5px solid #3399ff;
     }
     .stChatMessage[data-testid="chatAvatarIcon-assistant"] + div div {
-        background-color: #f0f0f0; /* Light grey for assistant messages */
+        background-color: #f2f2f2;
+        border-right: 5px solid #999999;
     }
 </style>
 """, unsafe_allow_html=True)
 
+# العنوان
 st.title("🤖 Chatbot LSTM, DEPI CLS")
 st.caption("مرحباً بك! أنا هنا لمساعدتك. كيف يمكنني خدمتك اليوم؟")
 
-# Sidebar
+# الشريط الجانبي
 with st.sidebar:
     st.header("عن الشات بوت")
-    st.markdown("هذا الشات بوت يستخدم نموذج LSTM للإجابة على استفساراتك.")
+    st.markdown("💡 هذا الشات بوت يستخدم نموذج LSTM للإجابة على استفساراتك.")
+    st.markdown("🛠️ تم تطويره بواسطة فريق DEPI Team:")
+    st.markdown("- Abdallah Samir\n- Youssef Samy\n- Shaaban Mosaad\n- Nada Amr\n- Mohammed Ahmed Badrawy")
 
-    st.markdown("تم تطويره بواسطة فريق DEPI Team.")
-    st.markdown("* Abdallah Samir")
-    st.markdown("* Youssef Samy")
-    st.markdown("* Shaaban Mosaad")
-    st.markdown("* Nada Amr")
-    st.markdown("* Mohammed Ahmed Badrawy")
-  
-
-    if st.button("مسح سجل المحادثة"):
+    if st.button("🧹 مسح سجل المحادثة"):
         st.session_state.messages = []
 
-# Initialize chat history
+# تهيئة المحادثة
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history on app rerun
+# عرض الرسائل السابقة
 for message in st.session_state.messages:
     avatar_icon = "🧑‍💻" if message["role"] == "user" else "🤖"
     with st.chat_message(message["role"], avatar=avatar_icon):
         st.markdown(message["content"])
 
-# React to user input
-if prompt := st.chat_input("اكتب رسالتك هنا..."):
-    # Display user message in chat message container
+# مدخل الرسائل
+if prompt := st.chat_input("💬 اكتب رسالتك هنا..."):
+    # عرض رسالة المستخدم
     with st.chat_message("user", avatar="🧑‍💻"):
         st.markdown(prompt)
-
-    # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
+    # الحصول على الرد من النموذج
     predicted_tag = predict_intent(prompt, model, tokenizer, lbl_encoder, max_len)
-    
-    response = "آسف، لم أفهم ذلك تمامًا. هل يمكنك محاولة إعادة صياغة سؤالك أو طرح سؤال آخر؟"
+
+    response = "آسف، لم أفهم ذلك تمامًا. هل يمكنك إعادة صياغة سؤالك؟"
     if predicted_tag and predicted_tag in tags_answers:
-        possible_responses = tags_answers[predicted_tag]
-        response = random.choice(possible_responses)
-    
-    # Display assistant response in chat message container
+        response = random.choice(tags_answers[predicted_tag])
+
+    # عرض رد الشات بوت
     with st.chat_message("assistant", avatar="🤖"):
         st.markdown(response)
-
-    # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
