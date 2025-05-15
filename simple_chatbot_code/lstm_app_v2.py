@@ -54,13 +54,13 @@ def load_all_resources():
 model, tokenizer, lbl_encoder, max_len, tags_answers = load_all_resources()
 
 def clean_pattern(msg):
-    pat_char = re.compile(r"[^A-Za-z\s]") # Allow spaces, characters
-    pat_spaces = re.compile(r"\s+")
+    pat_char = re.compile(r'[^A-Za-z]')
+    pat_spaces = re.compile(r'\s+')
 
     msg = str(msg).lower()
     msg = msg.strip()
-    msg = re.sub(pat_char, "", msg)
-    msg = re.sub(pat_spaces, " ", msg)
+    msg = re.sub(pat_char,' ', msg)
+    msg = re.sub(pat_spaces,' ', msg)
 
     tokens = nlp(msg)
     lemma = [token.lemma_ for token in tokens if not token.is_stop and not token.is_punct]
