@@ -26,11 +26,11 @@ def load_spacy_model():
 nlp = load_spacy_model()
 
 # Load pre-trained model and other necessary files
-MODEL_PATH = "/home/ubuntu/lstm_project/simple_chatbot_code/simple_chatbot_train_model.h5"
-TOKENIZER_PATH = "/home/ubuntu/lstm_project/simple_chatbot_code/tokenizer.pickle"
-LABEL_ENCODER_PATH = "/home/ubuntu/lstm_project/simple_chatbot_code/label_encoder.pickle"
-MAX_LEN_PATH = "/home/ubuntu/lstm_project/simple_chatbot_code/MAX_LEN.pickle"
-TAGS_ANSWERS_PATH = "/home/ubuntu/lstm_project/simple_chatbot_code/tags_answers.pickle"
+MODEL_PATH = "simple_chatbot_code/simple_chatbot_train_model.h5"
+TOKENIZER_PATH = "simple_chatbot_code/tokenizer.pickle"
+LABEL_ENCODER_PATH = "simple_chatbot_code/label_encoder.pickle"
+MAX_LEN_PATH = "simple_chatbot_code/MAX_LEN.pickle"
+TAGS_ANSWERS_PATH = "simple_chatbot_code/tags_answers.pickle"
 
 @st.cache_resource
 def load_all_resources():
@@ -99,7 +99,7 @@ st.caption("مرحباً بك! أنا هنا لمساعدتك. كيف يمكنن
 with st.sidebar:
     st.header("عن الشات بوت")
     st.markdown("هذا الشات بوت يستخدم نموذج LSTM للإجابة على استفساراتك.")
-    st.markdown("تم تطويره بواسطة فريق Manus.")
+    st.markdown("تم تطويره بواسطة فريق DEPI Team.")
     if st.button("مسح سجل المحادثة"):
         st.session_state.messages = []
 
