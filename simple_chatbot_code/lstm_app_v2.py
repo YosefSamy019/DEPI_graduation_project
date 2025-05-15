@@ -10,7 +10,7 @@ import spacy
 import random
 
 # Page config
-st.set_page_config(page_title="Chatbot LSTM المطور", layout="wide", page_icon="🤖")
+st.set_page_config(page_title="Chatbot LSTM", layout="wide", page_icon="🤖")
 
 # Load English tokenizer, tagger, parser, NER and word vectors
 @st.cache_resource
@@ -109,9 +109,9 @@ with st.sidebar:
     st.markdown("* Youssef Samy")
     st.markdown("* Shaaban Mosaad")
     st.markdown("* Nada Amr")
+    st.markdown("* Mostafa Ahmed Elesely")
     st.markdown("* Mohammed Ahmed Badrawy")
   
-
     if st.button("مسح سجل المحادثة"):
         st.session_state.messages = []
 
